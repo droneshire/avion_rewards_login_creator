@@ -14,7 +14,12 @@ class EmailParser:
         self.email = email
 
     def wait_for_login_code(
-        self, from_address: str, subject: str, search_regex: str, timeout: float = 60.0
+        self,
+        from_address: str,
+        subject: str,
+        search_regex: str,
+        timeout: float = 60.0,
+        delete_after_find: bool = False,
     ) -> str:
         # pylint: disable=too-many-locals
         start = time.time()
@@ -65,6 +70,10 @@ class EmailParser:
                     login_code = match.group(1)
                     log.print_ok(f"Login Code: {login_code}")
                     if login_code.isdigit():
+                        if delete_after_find:
+                            gmail.delete_messages(
+                                self.service, f"from:{from_address} subject:{subject}"
+                            )
                         return login_code
             log.print_normal("\rWaiting to find login code...")
             time.sleep(5.0)

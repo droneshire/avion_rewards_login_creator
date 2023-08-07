@@ -1,5 +1,6 @@
 import os
 
+import faker
 import undetected_chromedriver as uc
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
@@ -53,7 +54,7 @@ class AccountCreator:
     def init(self) -> None:
         log.print_ok_arrow("Initializing Account Creator...")
 
-    def start_new_account(self) -> None:
+    def start_new_account(self, login_email: str) -> None:
         wait(TIME_BETWEEN_STAGES)
         self.driver.get(BASE_URL)
 
@@ -75,16 +76,16 @@ class AccountCreator:
         button = self.driver.find_element(By.XPATH, '//*[@id="join-now"]/div[2]/div/div[1]/a')
         button.click()  # click Continue
 
-        self._input_email()
+        self._input_email(login_email)
 
-    def _input_email(self) -> None:
-        email = self.email
+    def _input_email(self, login_email: str) -> None:
+        log.print_bright(f"Creating account using email: {login_email}")
 
         input_field = self.driver.find_element(By.ID, "credential")
-        input_field.send_keys(email)
+        input_field.send_keys(login_email)
 
         input_field = self.driver.find_element(By.ID, "confirmCredential")
-        input_field.send_keys(email)
+        input_field.send_keys(login_email)
 
         wait(TIME_BETWEEN_STAGES)
 
@@ -123,9 +124,14 @@ class AccountCreator:
         self._input_profile()
 
     def _input_profile(self) -> None:
-        first_name = self.first_name
-        last_name = self.last_name
+        first_name = faker.Faker().first_name()
+        last_name = faker.Faker().last_name()
         password = self.password
+
+        log.print_ok_blue("Inputting profile information...")
+        log.print_ok_blue_arrow(f"First Name: {first_name}")
+        log.print_ok_blue_arrow(f"Last Name: {last_name}")
+        log.print_ok_blue_arrow(f"Password: {password}")
 
         input_field = WebDriverWait(self.driver, 30).until(
             EC.presence_of_element_located((By.XPATH, "//input[@id='firstName']"))

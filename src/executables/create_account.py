@@ -4,7 +4,6 @@ import random
 import string
 
 import dotenv
-import faker
 
 from account_creator import AccountCreator
 from config import PROJECT_NAME
@@ -56,20 +55,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--password",
         type=str,
-        help="Password to login with",
+        help="Password to login all accounts with",
         default=generate_random_string(10),
-    )
-    parser.add_argument(
-        "--first-name",
-        type=str,
-        help="First name to register with",
-        default=faker.Faker().first_name(),
-    )
-    parser.add_argument(
-        "--last-name",
-        type=str,
-        help="Last name to register with",
-        default=faker.Faker().last_name(),
     )
     parser.add_argument(
         "--manual-input",
@@ -81,11 +68,15 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Close the browser on exit",
     )
-
+    parser.add_argument(
+        "--save-after-read",
+        action="store_true",
+        help="Save email after reading instead of deleting",
+    )
     return parser.parse_args()
 
 
-def get_login_code_from_parser(email: str, creds_env: str) -> str:
+def get_login_code_from_parser(email: str, creds_env: str, delete_after_find: bool = False) -> str:
     creds = os.environ.get(creds_env)
 
     code_from_address = os.environ.get("AVION_REWARDS_EMAIL_ADDRESS")
@@ -116,6 +107,7 @@ def get_login_code_from_parser(email: str, creds_env: str) -> str:
         subject=code_subject,
         search_regex=code_regex,
         timeout=120.0,
+        delete_after_find=delete_after_find,
     )
 
     return login_code
@@ -127,25 +119,35 @@ def run_loop(args: argparse.Namespace) -> None:
     )
 
     creator.init()
-    creator.start_new_account()
 
-    wait.wait(20)
+    emails = [e.strip() for e in os.environ.get("ACCOUNT_EMAILS", "").split(",")]
 
-    if args.manual_input:
-        login_code = input("Enter email login code: ")
-    else:
-        login_code = get_login_code_from_parser(args.email, "GOOGLE_OATH_CREDENTIALS_FILE_MAIN")
+    for email in emails:
+        creator.start_new_account(email)
 
-    creator.input_login_code(login_code)
+        wait.wait(20)
 
-    if args.manual_input:
-        backup_login_code = input("Enter backup email login code: ")
-    else:
-        backup_login_code = get_login_code_from_parser(
-            args.backup_email, "GOOGLE_OATH_CREDENTIALS_FILE_BACKUP"
-        )
+        if args.manual_input:
+            login_code = input("Enter email login code: ")
+        else:
+            login_code = get_login_code_from_parser(
+                args.email,
+                "GOOGLE_OATH_CREDENTIALS_FILE_MAIN",
+                delete_after_find=not args.save_after_read,
+            )
 
-    creator.input_backup_login_code(backup_login_code)
+        creator.input_login_code(login_code)
+
+        if args.manual_input:
+            backup_login_code = input("Enter backup email login code: ")
+        else:
+            backup_login_code = get_login_code_from_parser(
+                args.backup_email,
+                "GOOGLE_OATH_CREDENTIALS_FILE_BACKUP",
+                delete_after_find=not args.save_after_read,
+            )
+
+        creator.input_backup_login_code(backup_login_code)
 
     if args.close_on_exit:
         creator.close()

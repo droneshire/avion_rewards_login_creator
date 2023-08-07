@@ -56,18 +56,54 @@ GOOGLE_OATH_CREDENTIALS_FILE_BACKUP="google_credentials_backup.json"
 GMAIL_BACKUP_EMAIL="BACKUP_EMAIL@gmail.com"
 ```
 
+## Installation
+
+From the directory that this repo was cloned into:
+
+**On Linux/Mac:**
+
+```
+make init
+make install
+source ./venv/bin/activate
+```
+
+**On Windows:**
+
+```
+python3 -m venv venv
+pip3 install -r requirements.txt
+source .\venv\bin\activate
+```
+
 ## Running the Script
 
-On Linux/Mac:
+**On Linux/Mac:**
+
+To manually input the login codes:
 
 ```
-make create_account email=foo@gmail.com backup_email=bar@gmail.com
+make create_account_manual email=foo@gmail.com backup_email=bar@gmail.com
 ```
 
-On Windows:
+To auto input the login codes (must provide the oauth credentials from `Email Setup` above)
 
 ```
-PYTHONPATH=C:\Path\To\Repo\src python3 -m executables.create_account --email foo@gmail.com --backup-email bar@gmail.com
+make create_account_auto
+```
+
+**On Windows:**
+
+To manually input the login codes:
+
+```
+PYTHONPATH=C:\Path\To\Repo\src python3 -m executables.create_account --manual-input --email foo@gmail.com --backup-email bar@gmail.com
+```
+
+To auto input the login codes (must provide the oauth credentials from `Email Setup` above)
+
+```
+PYTHONPATH=C:\Path\To\Repo\src python3 -m executables.create_account
 ```
 
 ## Landing Page

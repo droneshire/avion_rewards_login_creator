@@ -230,5 +230,17 @@ class AccountCreator:
 
         wait(TIME_BETWEEN_STAGES)
 
+        self._wait_for_success()
+
+    def _wait_for_success(self) -> None:
+        WebDriverWait(self.driver, 30).until(
+            EC.presence_of_element_located(
+                (
+                    By.XPATH,
+                    '/html/body/app-root/app-layout/div/div/app-login-credential/rbc-alert/div/div/div/div[1]/div[1]/label[text()="Success"]',  # pylint: disable=line-too-long
+                )
+            )
+        )
+
     def close(self) -> None:
         self.driver.quit()

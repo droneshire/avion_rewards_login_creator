@@ -101,6 +101,8 @@ def run_loop(args: argparse.Namespace) -> None:
 
         creator.input_backup_login_code(backup_login_code)
 
+    wait.wait(5)
+
     if args.close_on_exit:
         creator.close()
 

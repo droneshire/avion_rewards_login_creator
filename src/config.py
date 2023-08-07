@@ -6,7 +6,7 @@ CHROME_DRIVER_PATHS = {
     "Linux": {
         "browser": "/usr/bin/google-chrome-stable",
         "driver": "/usr/local/bin/chromedriver",
-        "extension": "/home/ross/.config/google-chrome/Default/Extensions/pabjfbciaedomjjfelfafejkppknjleh/1.8.10_0.crx",
+        "extension": "/home/ross/.config/google-chrome/Default/Extensions/pabjfbciaedomjjfelfafejkppknjleh/1.8.10_0.crx",  # pylint: disable=line-too-long
     },
     "Windows": {
         "browser": "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe",

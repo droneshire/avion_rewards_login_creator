@@ -40,26 +40,17 @@ def parse_args() -> argparse.Namespace:
         help="Run the script without actually sending SMS",
     )
 
-    src_dir = os.path.dirname(os.path.dirname(__file__))
-    root_dir = os.path.dirname(src_dir)
-    parser.add_argument(
-        "--google-credentials-file",
-        type=str,
-        help="Google API credentials file",
-        default=os.path.join(root_dir, "google_credentials.json"),
-    )
-
     parser.add_argument(
         "--email",
         type=str,
         help="Email address to login with",
-        required=True,
+        default=os.environ.get("GMAIL_MAIN_EMAIL"),
     )
     parser.add_argument(
         "--backup-email",
         type=str,
         help="Backup email address to register with",
-        required=True,
+        required=os.environ.get("GMAIL_BACKUP_EMAIL"),
     )
     parser.add_argument(
         "--password",
@@ -79,6 +70,16 @@ def parse_args() -> argparse.Namespace:
         help="Last name to register with",
         default=faker.Faker().last_name(),
     )
+    parser.add_argument(
+        "--manual-input",
+        action="store_true",
+        help="Manually input codes instead of email parser",
+    )
+    parser.add_argument(
+        "--close-on-exit",
+        action="store_true",
+        help="Close the browser on exit",
+    )
 
     return parser.parse_args()
 
@@ -90,19 +91,38 @@ def run_loop(args: argparse.Namespace) -> None:
 
     creator.init()
     creator.start_new_account()
-    # login_code = email_parser.wait_for_login_code()
-    login_code = input("Enter email login code: ")
+
+    if args.manual_input:
+        login_code = input("Enter email login code: ")
+    else:
+        login_code = email_parser.wait_for_login_code()
     creator.input_login_code(login_code)
-    # login_code = email_parser.wait_for_login_code()
-    backup_login_code = input("Enter backup email login code: ")
+
+    if args.manual_input:
+        backup_login_code = input("Enter backup email login code: ")
+    else:
+        backup_login_code = email_parser.wait_for_login_code()
     creator.input_backup_login_code(backup_login_code)
 
-    creator.close()
+    if args.close_on_exit:
+        creator.close()
 
 
 def main() -> None:
-    args = parse_args()
     dotenv.load_dotenv(".env")
+    args = parse_args()
+
+    main_creds = os.environ.get("GOOGLE_OATH_CREDENTIALS_FILE_MAIN")
+    backup_creds = os.environ.get("GOOGLE_OATH_CREDENTIALS_FILE_BACKUP")
+
+    if not args.manual_input and (not main_creds or not backup_creds):
+        log.print_fail(
+            "Missing Google Oath Credentials.\n"
+            "Either use the --manual-input flag or set the "
+            "GOOGLE_OATH_CREDENTIALS_FILE_MAIN and "
+            "GOOGLE_OATH_CREDENTIALS_FILE_BACKUP environment variables."
+        )
+        exit(1)
 
     log.setup_log(args.log_level, args.log_dir, PROJECT_NAME)
     log.print_ok_blue("Creating new Avion Account...")

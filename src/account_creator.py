@@ -9,7 +9,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
 from config import BASE_URL, CHROME_DRIVER_PATHS
-from util import log
+from util import log, wait
 
 
 def get_driver() -> uc.Chrome:
@@ -53,12 +53,12 @@ class AccountCreator:
         log.print_ok_arrow("Initializing Account Creator...")
 
     def start_new_account(self) -> None:
-        time.sleep(1)
+        wait(1)
         self.driver.get(BASE_URL)
         self.driver.maximize_window()
 
-        wait = WebDriverWait(self.driver, 30)
-        wait.until(
+        web_driver_wait = WebDriverWait(self.driver, 30)
+        web_driver_wait.until(
             EC.presence_of_element_located(
                 (By.XPATH, '//*[@id="join-now"]/div[2]/div/fieldset/label[2]')
             )
@@ -68,13 +68,14 @@ class AccountCreator:
         )  # select No
         radio_button.click()
 
-        wait = WebDriverWait(self.driver, 10)
-        wait.until(
+        web_driver_wait = WebDriverWait(self.driver, 10)
+        web_driver_wait.until(
             EC.presence_of_element_located((By.XPATH, '//*[@id="join-now"]/div[2]/div/div[1]/a'))
         )
         button = self.driver.find_element(By.XPATH, '//*[@id="join-now"]/div[2]/div/div[1]/a')
         button.click()  # click Continue
 
+        wait(2)
         self._input_email()
 
     def _input_email(self) -> None:
@@ -87,9 +88,9 @@ class AccountCreator:
 
         for character in email:
             input_field.send_keys(character)
-            time.sleep(random.uniform(0.05, 0.1))
+            wait(random.uniform(0.05, 0.1))
 
-        time.sleep(1)
+        wait(1)
 
         button = WebDriverWait(self.driver, 30).until(
             EC.element_to_be_clickable(
@@ -100,6 +101,7 @@ class AccountCreator:
             )
         )
         button.click()
+        wait(2)
 
     def input_login_code(self, code: str) -> None:
         input_field = WebDriverWait(self.driver, 30).until(
@@ -116,6 +118,8 @@ class AccountCreator:
             )
         )
         button.click()
+
+        wait(2)
 
         self._input_profile()
 
@@ -154,6 +158,8 @@ class AccountCreator:
         )
         button.click()
 
+        wait(2)
+
         self._review_terms()
 
     def _review_terms(self) -> None:
@@ -177,6 +183,8 @@ class AccountCreator:
         )
         button.click()
 
+        wait(2)
+
         self._backup_email()
 
     def _backup_email(self) -> None:
@@ -194,6 +202,9 @@ class AccountCreator:
                 )
             )
         )
+
+        wait(2)
+
         button.click()
 
     def input_backup_login_code(self, code: str) -> None:
@@ -211,6 +222,8 @@ class AccountCreator:
             )
         )
         button.click()
+
+        wait(2)
 
     def close(self) -> None:
         self.driver.quit()

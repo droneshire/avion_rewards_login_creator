@@ -35,8 +35,10 @@ lint: check_format mypy pylint
 test:
 	$(RUN_PY) unittest discover -s test -p *_test.py -v
 
-# rule that inputs 4 args and runs exectables.create_account
-create_account:
-	$(RUN_PY) executables.create_account --email $(email) --backup-email $(backup_email)
+create_account_manual:
+	$(RUN_PY) executables.create_account --email $(email) --backup-email $(backup_email) --manual-input
+
+create_account_auto:
+	$(RUN_PY) executables.create_account
 
 .PHONY: install format check_format check_types pylint lint test creator_bot account_bot server

@@ -17,7 +17,6 @@ From the directory that this repo was cloned into:
 ```
 make init
 make install
-source ./venv/bin/activate
 ```
 
 **On Windows:**

@@ -64,7 +64,7 @@ def delete_messages(service, query):
 
 def mark_as_read(service, query):
     messages_to_mark = search_messages(service, query)
-    print(f"Matched emails: {len(messages_to_mark)}")
+    log.print_normal(f"Matched emails: {len(messages_to_mark)}")
     return (
         service.users()
         .messages()
@@ -78,7 +78,7 @@ def mark_as_read(service, query):
 
 def mark_as_unread(service, query):
     messages_to_mark = search_messages(service, query)
-    print(f"Matched emails: {len(messages_to_mark)}")
+    log.print_normal(f"Matched emails: {len(messages_to_mark)}")
     return (
         service.users()
         .messages()

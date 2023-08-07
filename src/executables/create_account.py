@@ -13,7 +13,7 @@ from util import log
 
 def generate_random_string(length: int) -> str:
     # Define the characters you want to include in the random string
-    characters = string.ascii_letters + string.digits + string.punctuation
+    characters = string.ascii_letters + string.digits
 
     # Generate the random string
     random_string = "".join(random.choice(characters) for _ in range(length))

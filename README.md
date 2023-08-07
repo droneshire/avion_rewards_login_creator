@@ -6,7 +6,7 @@ Automatically Create Avion Rewards Logins
 
 ## Video Demo
 
-[Video Screen Record in Action](https://youtu.be/IkJCUf_JBTk)
+[![Video Screen Record in Action](https://img.youtube.com/vi/IkJCUf_JBTk/0.jpg)](https://www.youtube.com/watch?v=IkJCUf_JBTk)
 
 ## Email Setup
 

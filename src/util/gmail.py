@@ -14,12 +14,13 @@ from util import log
 SCOPES = ["https://mail.google.com/"]
 
 
-def gmail_authenticate(credentials_path: str) -> build:
+def gmail_authenticate(email: str, credentials_path: str) -> build:
     creds = None
+    cookie_path = f"token_{email}.pickle"
     # the file token.pickle stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first time
-    if os.path.exists("token.pickle"):
-        with open("token.pickle", "rb") as token:
+    if os.path.exists(cookie_path):
+        with open(cookie_path, "rb") as token:
             creds = pickle.load(token)
     # if there are no (valid) credentials availablle, let the user log in.
     if not creds or not creds.valid:
@@ -29,7 +30,7 @@ def gmail_authenticate(credentials_path: str) -> build:
             flow = InstalledAppFlow.from_client_secrets_file(credentials_path, SCOPES)
             creds = flow.run_local_server(port=0)
         # save the credentials for the next run
-        with open("token.pickle", "wb") as token:
+        with open(cookie_path, "wb") as token:
             pickle.dump(creds, token)
     return build("gmail", "v1", credentials=creds)
 

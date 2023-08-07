@@ -1,5 +1,4 @@
 import os
-import random
 
 import undetected_chromedriver as uc
 from selenium.webdriver.chrome.options import Options
@@ -10,6 +9,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from config import BASE_URL
 from util import log
 from util.wait import wait
+
+TIME_BETWEEN_STAGES = 2
 
 
 def get_driver() -> uc.Chrome:
@@ -53,9 +54,8 @@ class AccountCreator:
         log.print_ok_arrow("Initializing Account Creator...")
 
     def start_new_account(self) -> None:
-        wait(1)
+        wait(TIME_BETWEEN_STAGES)
         self.driver.get(BASE_URL)
-        self.driver.maximize_window()
 
         web_driver_wait = WebDriverWait(self.driver, 30)
         web_driver_wait.until(
@@ -75,7 +75,6 @@ class AccountCreator:
         button = self.driver.find_element(By.XPATH, '//*[@id="join-now"]/div[2]/div/div[1]/a')
         button.click()  # click Continue
 
-        wait(2)
         self._input_email()
 
     def _input_email(self) -> None:
@@ -85,12 +84,9 @@ class AccountCreator:
         input_field.send_keys(email)
 
         input_field = self.driver.find_element(By.ID, "confirmCredential")
+        input_field.send_keys(email)
 
-        for character in email:
-            input_field.send_keys(character)
-            wait(random.uniform(0.05, 0.1))
-
-        wait(1)
+        wait(TIME_BETWEEN_STAGES)
 
         button = WebDriverWait(self.driver, 30).until(
             EC.element_to_be_clickable(
@@ -101,7 +97,10 @@ class AccountCreator:
             )
         )
         button.click()
-        wait(2)
+
+        WebDriverWait(self.driver, 60).until(
+            EC.presence_of_element_located((By.XPATH, "//input[@id='code']"))
+        )
 
     def input_login_code(self, code: str) -> None:
         input_field = WebDriverWait(self.driver, 30).until(
@@ -119,7 +118,7 @@ class AccountCreator:
         )
         button.click()
 
-        wait(2)
+        wait(TIME_BETWEEN_STAGES)
 
         self._input_profile()
 
@@ -158,7 +157,7 @@ class AccountCreator:
         )
         button.click()
 
-        wait(2)
+        wait(TIME_BETWEEN_STAGES)
 
         self._review_terms()
 
@@ -183,7 +182,7 @@ class AccountCreator:
         )
         button.click()
 
-        wait(2)
+        wait(TIME_BETWEEN_STAGES)
 
         self._backup_email()
 
@@ -203,7 +202,7 @@ class AccountCreator:
             )
         )
 
-        wait(2)
+        wait(TIME_BETWEEN_STAGES)
 
         button.click()
 
@@ -223,7 +222,7 @@ class AccountCreator:
         )
         button.click()
 
-        wait(2)
+        wait(TIME_BETWEEN_STAGES)
 
     def close(self) -> None:
         self.driver.quit()

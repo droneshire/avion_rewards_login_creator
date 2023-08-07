@@ -16,6 +16,10 @@ We first enable the Google mail API, head to the dashboard, and use the search b
 
 ![image](https://github.com/droneshire/avion_rewards_login_creator/assets/2355438/331093bd-db53-4abd-9b33-54f4b31ef2e4)
 
+Now, configure the Consent screen by clicking on OAuth Consent Screen if it is not already configured.
+
+Make sure the app is in Testing mode, and add the email you will use to auth under the `Test users` section
+
 We then create an OAuth 2.0 client ID by creating credentials (by heading to the Create Credentials button):
 
 ![image](https://github.com/droneshire/avion_rewards_login_creator/assets/2355438/c616dabe-662a-4259-953e-fc8b3b470433)
@@ -54,6 +58,10 @@ GOOGLE_OATH_CREDENTIALS_FILE_MAIN="google_credentials_main.json"
 GMAIL_MAIN_EMAIL="MAIN_EMAIL@gmail.com"
 GOOGLE_OATH_CREDENTIALS_FILE_BACKUP="google_credentials_backup.json"
 GMAIL_BACKUP_EMAIL="BACKUP_EMAIL@gmail.com"
+
+AVION_REWARDS_EMAIL_ADDRESS="Avion Rewards <avionrewards@offers.rbc.com>"
+AVION_REWARDS_EMAIL_SUBJECT="Avion Rewards Security Code"
+AVION_REWARDS_EMAIL_REGEX=Your Avion Rewards security code is (\d{6})
 ```
 
 ## Installation

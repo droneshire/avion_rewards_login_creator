@@ -2,7 +2,6 @@ import argparse
 import os
 import random
 import string
-import time
 
 import dotenv
 import faker
@@ -10,9 +9,7 @@ import faker
 from account_creator import AccountCreator
 from config import PROJECT_NAME
 from email_parser import EmailParser
-from util import log
-
-MIN_TIME_BETWEEN_EMAILS = 60.0 * 3.0
+from util import log, wait
 
 
 def generate_random_string(length: int) -> str:
@@ -93,7 +90,7 @@ def get_login_code_from_parser(email: str, creds_env: str) -> str:
 
     code_from_address = os.environ.get("AVION_REWARDS_EMAIL_ADDRESS")
     code_subject = os.environ.get("AVION_REWARDS_EMAIL_SUBJECT")
-    code_body = os.environ.get("AVION_REWARDS_EMAIL_BODY")
+    code_regex = os.environ.get("AVION_REWARDS_EMAIL_REGEX")
 
     if not creds:
         log.print_fail(
@@ -104,7 +101,7 @@ def get_login_code_from_parser(email: str, creds_env: str) -> str:
         )
         raise ValueError("Missing Google Oath Credentials.")
 
-    if not code_from_address or not code_subject or not code_body:
+    if not code_from_address or not code_subject or not code_regex:
         log.print_fail(
             "Missing environment variables.\n"
             "Set AVION_REWARDS_EMAIL_ADDRESS, AVION_REWARDS_EMAIL_SUBJECT, and "
@@ -117,8 +114,7 @@ def get_login_code_from_parser(email: str, creds_env: str) -> str:
     login_code = email_parser.wait_for_login_code(
         from_address=code_from_address,
         subject=code_subject,
-        body=code_body,
-        min_time=time.time() - MIN_TIME_BETWEEN_EMAILS,
+        search_regex=code_regex,
         timeout=120.0,
     )
 
@@ -132,6 +128,8 @@ def run_loop(args: argparse.Namespace) -> None:
 
     creator.init()
     creator.start_new_account()
+
+    wait.wait(20)
 
     if args.manual_input:
         login_code = input("Enter email login code: ")

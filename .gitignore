@@ -3,6 +3,7 @@ params.json
 firebase_service_account.json
 *.pid
 google_credentials*.json
+*.pickle
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

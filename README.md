@@ -8,6 +8,46 @@ Automatically Create Avion Rewards Logins
 
 [![Video Screen Record in Action](https://img.youtube.com/vi/IkJCUf_JBTk/0.jpg)](https://www.youtube.com/watch?v=IkJCUf_JBTk)
 
+## Installation
+
+From the directory that this repo was cloned into:
+
+**On Linux/Mac:**
+
+```
+make init
+make install
+source ./venv/bin/activate
+```
+
+**On Windows:**
+
+```
+python3 -m venv venv
+pip3 install -r requirements.txt
+source .\venv\bin\activate
+```
+
+## Setup
+
+Create a `.env` file in the root directory (same place this `README` is located in) with the following:
+
+```
+# Chrome Driver Configs
+CHROME_DRIVER_PATHS_BROWSER="/usr/bin/google-chrome-stable"
+CHROME_DRIVER_PATHS_DRIVER="/usr/local/bin/chromedriver"
+
+# Google Email Credentials
+GOOGLE_OATH_CREDENTIALS_FILE_MAIN="google_credentials_main.json"
+GMAIL_MAIN_EMAIL="MAIN_EMAIL@gmail.com"
+GOOGLE_OATH_CREDENTIALS_FILE_BACKUP="google_credentials_backup.json"
+GMAIL_BACKUP_EMAIL="BACKUP_EMAIL@gmail.com"
+
+AVION_REWARDS_EMAIL_ADDRESS="Avion Rewards <avionrewards@offers.rbc.com>"
+AVION_REWARDS_EMAIL_SUBJECT="Avion Rewards Security Code"
+AVION_REWARDS_EMAIL_REGEX=Your Avion Rewards security code is (\d{6})
+```
+
 ## Email Setup
 
 If you want the bot to automatically parse the login codes from email addresses, you'll need to enable OATH on the master email account and on the backup email account:
@@ -47,46 +87,6 @@ Note: If this is the first time you use Google APIs, you may need to simply crea
 Save this credential file in the root directory (same place this `README` is located in).
 
 Do this for both email accounts (e.g. as `google_credentials_main.json` and `google_credentials_backup.json`)
-
-## Env File
-
-Create a `.env` file in the root directory (same place this `README` is located in) with the following:
-
-```
-# Chrome Driver Configs
-CHROME_DRIVER_PATHS_BROWSER="/usr/bin/google-chrome-stable"
-CHROME_DRIVER_PATHS_DRIVER="/usr/local/bin/chromedriver"
-
-# Google Email Credentials
-GOOGLE_OATH_CREDENTIALS_FILE_MAIN="google_credentials_main.json"
-GMAIL_MAIN_EMAIL="MAIN_EMAIL@gmail.com"
-GOOGLE_OATH_CREDENTIALS_FILE_BACKUP="google_credentials_backup.json"
-GMAIL_BACKUP_EMAIL="BACKUP_EMAIL@gmail.com"
-
-AVION_REWARDS_EMAIL_ADDRESS="Avion Rewards <avionrewards@offers.rbc.com>"
-AVION_REWARDS_EMAIL_SUBJECT="Avion Rewards Security Code"
-AVION_REWARDS_EMAIL_REGEX=Your Avion Rewards security code is (\d{6})
-```
-
-## Installation
-
-From the directory that this repo was cloned into:
-
-**On Linux/Mac:**
-
-```
-make init
-make install
-source ./venv/bin/activate
-```
-
-**On Windows:**
-
-```
-python3 -m venv venv
-pip3 install -r requirements.txt
-source .\venv\bin\activate
-```
 
 ## Running the Script
 

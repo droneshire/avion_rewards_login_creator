@@ -1,3 +1,10 @@
+"""
+Modified and cleaned up from
+
+https://github.com/x4nth055/pythoncode-tutorials/tree/master/general/gmail-api
+
+Thanks!
+"""
 import os
 import pickle
 import typing as T

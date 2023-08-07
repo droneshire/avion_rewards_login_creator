@@ -114,13 +114,18 @@ def get_login_code_from_parser(email: str, creds_env: str, delete_after_find: bo
 
 
 def run_loop(args: argparse.Namespace) -> None:
-    creator = AccountCreator(
-        args.email, args.backup_email, args.password, args.first_name, args.last_name
-    )
+    creator = AccountCreator(args.email, args.backup_email, args.password)
 
     creator.init()
 
     emails = [e.strip() for e in os.environ.get("ACCOUNT_EMAILS", "").split(",")]
+
+    if not emails:
+        log.print_fail("Missing ACCOUNT_EMAILS environment variable.")
+        raise ValueError("Missing ACCOUNT_EMAILS environment variable.")
+
+    email_list_strings = "\t\n".join(emails)
+    log.print_ok_blue(f"Creating {len(emails)} accounts:\n\t{email_list_strings}")
 
     for email in emails:
         creator.start_new_account(email)

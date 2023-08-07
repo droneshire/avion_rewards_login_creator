@@ -41,15 +41,11 @@ def get_driver() -> uc.Chrome:
 
 
 class AccountCreator:
-    def __init__(
-        self, email: str, backup_email: str, password: str, first_name: str, last_name: str
-    ):
+    def __init__(self, email: str, backup_email: str, password: str):
         self.driver = get_driver()
         self.email = email
         self.backup_email = backup_email
         self.password = password
-        self.first_name = first_name
-        self.last_name = last_name
 
     def init(self) -> None:
         log.print_ok_arrow("Initializing Account Creator...")

@@ -2,6 +2,7 @@ logs/
 params.json
 firebase_service_account.json
 *.pid
+google_credentials*.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

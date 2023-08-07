@@ -1,5 +1,6 @@
 import os
 import pickle
+import typing as T
 
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -13,7 +14,7 @@ from util import log
 SCOPES = ["https://mail.google.com/"]
 
 
-def gmail_authenticate():
+def gmail_authenticate(credentials_path: str) -> build:
     creds = None
     # the file token.pickle stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first time
@@ -25,7 +26,7 @@ def gmail_authenticate():
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file("credentials.json", SCOPES)
+            flow = InstalledAppFlow.from_client_secrets_file(credentials_path, SCOPES)
             creds = flow.run_local_server(port=0)
         # save the credentials for the next run
         with open("token.pickle", "wb") as token:
@@ -33,7 +34,7 @@ def gmail_authenticate():
     return build("gmail", "v1", credentials=creds)
 
 
-def search_messages(service, query):
+def search_messages(service: build, query: str) -> T.List[T.Any]:
     result = service.users().messages().list(userId="me", q=query).execute()
     messages = []
     if "messages" in result:
@@ -48,7 +49,7 @@ def search_messages(service, query):
     return messages
 
 
-def delete_messages(service, query):
+def delete_messages(service: build, query: str) -> T.Any:
     messages_to_delete = search_messages(service, query)
     log.print_bold(f"Deleting {len(messages_to_delete)} emails.")
     # it's possible to delete a single message with the delete API, like this:
@@ -62,7 +63,7 @@ def delete_messages(service, query):
     )
 
 
-def mark_as_read(service, query):
+def mark_as_read(service: build, query: str) -> T.Any:
     messages_to_mark = search_messages(service, query)
     log.print_normal(f"Matched emails: {len(messages_to_mark)}")
     return (
@@ -76,7 +77,7 @@ def mark_as_read(service, query):
     )
 
 
-def mark_as_unread(service, query):
+def mark_as_unread(service: build, query: str) -> T.Any:
     messages_to_mark = search_messages(service, query)
     log.print_normal(f"Matched emails: {len(messages_to_mark)}")
     return (

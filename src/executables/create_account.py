@@ -2,13 +2,17 @@ import argparse
 import os
 import random
 import string
+import time
 
 import dotenv
 import faker
 
 from account_creator import AccountCreator
 from config import PROJECT_NAME
+from email_parser import EmailParser
 from util import log
+
+MIN_TIME_BETWEEN_EMAILS = 60.0 * 3.0
 
 
 def generate_random_string(length: int) -> str:
@@ -50,7 +54,7 @@ def parse_args() -> argparse.Namespace:
         "--backup-email",
         type=str,
         help="Backup email address to register with",
-        required=os.environ.get("GMAIL_BACKUP_EMAIL"),
+        default=os.environ.get("GMAIL_BACKUP_EMAIL"),
     )
     parser.add_argument(
         "--password",
@@ -84,6 +88,43 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def get_login_code_from_parser(email: str, creds_env: str) -> str:
+    creds = os.environ.get(creds_env)
+
+    code_from_address = os.environ.get("AVION_REWARDS_EMAIL_ADDRESS")
+    code_subject = os.environ.get("AVION_REWARDS_EMAIL_SUBJECT")
+    code_body = os.environ.get("AVION_REWARDS_EMAIL_BODY")
+
+    if not creds:
+        log.print_fail(
+            "Missing Google Oath Credentials.\n"
+            "Either use the --manual-input flag or set the "
+            "GOOGLE_OATH_CREDENTIALS_FILE_MAIN and "
+            "GOOGLE_OATH_CREDENTIALS_FILE_BACKUP environment variables."
+        )
+        raise ValueError("Missing Google Oath Credentials.")
+
+    if not code_from_address or not code_subject or not code_body:
+        log.print_fail(
+            "Missing environment variables.\n"
+            "Set AVION_REWARDS_EMAIL_ADDRESS, AVION_REWARDS_EMAIL_SUBJECT, and "
+            "AVION_REWARDS_EMAIL_BODY."
+        )
+        raise ValueError("Missing environment variables.")
+
+    email_parser = EmailParser(email=email, credentials_path=creds)
+
+    login_code = email_parser.wait_for_login_code(
+        from_address=code_from_address,
+        subject=code_subject,
+        body=code_body,
+        min_time=time.time() - MIN_TIME_BETWEEN_EMAILS,
+        timeout=120.0,
+    )
+
+    return login_code
+
+
 def run_loop(args: argparse.Namespace) -> None:
     creator = AccountCreator(
         args.email, args.backup_email, args.password, args.first_name, args.last_name
@@ -95,13 +136,17 @@ def run_loop(args: argparse.Namespace) -> None:
     if args.manual_input:
         login_code = input("Enter email login code: ")
     else:
-        login_code = email_parser.wait_for_login_code()
+        login_code = get_login_code_from_parser(args.email, "GOOGLE_OATH_CREDENTIALS_FILE_MAIN")
+
     creator.input_login_code(login_code)
 
     if args.manual_input:
         backup_login_code = input("Enter backup email login code: ")
     else:
-        backup_login_code = email_parser.wait_for_login_code()
+        backup_login_code = get_login_code_from_parser(
+            args.backup_email, "GOOGLE_OATH_CREDENTIALS_FILE_BACKUP"
+        )
+
     creator.input_backup_login_code(backup_login_code)
 
     if args.close_on_exit:
@@ -111,18 +156,6 @@ def run_loop(args: argparse.Namespace) -> None:
 def main() -> None:
     dotenv.load_dotenv(".env")
     args = parse_args()
-
-    main_creds = os.environ.get("GOOGLE_OATH_CREDENTIALS_FILE_MAIN")
-    backup_creds = os.environ.get("GOOGLE_OATH_CREDENTIALS_FILE_BACKUP")
-
-    if not args.manual_input and (not main_creds or not backup_creds):
-        log.print_fail(
-            "Missing Google Oath Credentials.\n"
-            "Either use the --manual-input flag or set the "
-            "GOOGLE_OATH_CREDENTIALS_FILE_MAIN and "
-            "GOOGLE_OATH_CREDENTIALS_FILE_BACKUP environment variables."
-        )
-        exit(1)
 
     log.setup_log(args.log_level, args.log_dir, PROJECT_NAME)
     log.print_ok_blue("Creating new Avion Account...")

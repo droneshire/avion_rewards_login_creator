@@ -1,6 +1,5 @@
-import platform
+import os
 import random
-import time
 
 import undetected_chromedriver as uc
 from selenium.webdriver.chrome.options import Options
@@ -8,8 +7,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-from config import BASE_URL, CHROME_DRIVER_PATHS
-from util import log, wait
+from config import BASE_URL
+from util import log
+from util.wait import wait
 
 
 def get_driver() -> uc.Chrome:
@@ -23,12 +23,12 @@ def get_driver() -> uc.Chrome:
     options.add_argument("--disable-web-security")
     options.add_argument("--log-level=3")
     options.add_argument("--disable-blink-features=AutomationControlled")
-    extension = CHROME_DRIVER_PATHS[platform.system()].get("extension", "")
+    extension = os.environ.get("CHROME_DRIVER_PATHS_EXTENSION")
     if extension:
         options.add_extension(extension)
-    options.binary_location = CHROME_DRIVER_PATHS[platform.system()]["browser"]
+    options.binary_location = os.environ.get("CHROME_DRIVER_PATHS_BROWSER", "")
     driver = uc.Chrome(
-        options=options, executable_path=CHROME_DRIVER_PATHS[platform.system()]["driver"], delay=10
+        options=options, executable_path=os.environ.get("CHROME_DRIVER_PATHS_DRIVER"), delay=10
     )
 
     driver.set_page_load_timeout(120)

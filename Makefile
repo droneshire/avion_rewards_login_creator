@@ -41,4 +41,7 @@ create_account_manual:
 create_account_auto:
 	$(RUN_PY) executables.create_account
 
+clean:
+	rm -rf *.pickle
+
 .PHONY: install format check_format check_types pylint lint test creator_bot account_bot server

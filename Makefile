@@ -35,7 +35,8 @@ lint: check_format mypy pylint
 test:
 	$(RUN_PY) unittest discover -s test -p *_test.py -v
 
-run_bot:
-	$(RUN_PY) executables.property_guru_bot --log-level=INFO --params-file=/tmp/params.json
+# rule that inputs 4 args and runs exectables.create_account
+create_account:
+	$(RUN_PY) executables.create_account --email $(email) --backup-email $(backup_email)
 
 .PHONY: install format check_format check_types pylint lint test creator_bot account_bot server

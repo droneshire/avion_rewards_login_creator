@@ -4,7 +4,7 @@ import random
 import string
 
 import dotenv
-import fake
+import faker
 
 from account_creator import AccountCreator
 from config import PROJECT_NAME
@@ -71,13 +71,13 @@ def parse_args() -> argparse.Namespace:
         "--first-name",
         type=str,
         help="First name to register with",
-        default=fake.Faker().first_name(),
+        default=faker.Faker().first_name(),
     )
     parser.add_argument(
         "--last-name",
         type=str,
         help="Last name to register with",
-        default=fake.Faker().last_name(),
+        default=faker.Faker().last_name(),
     )
 
     return parser.parse_args()

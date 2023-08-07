@@ -4,6 +4,8 @@
 
 Automatically Create Avion Rewards Logins
 
+[Video Screen Record in Action](https://youtu.be/IkJCUf_JBTk)
+
 ## Email Setup
 
 If you want the bot to automatically parse the login codes from email addresses, you'll need to enable OATH on the master email account and on the backup email account:
@@ -114,12 +116,14 @@ To auto input the login codes (must provide the oauth credentials from `Email Se
 PYTHONPATH=C:\Path\To\Repo\src python3 -m executables.create_account
 ```
 
-## Landing Page
+## Screenshots
+
+### Landing Page
 
 Starts here, the bot does the rest!
 
 ![image](https://github.com/droneshire/avion_rewards_login_creator/assets/2355438/2de61549-1836-422d-86fb-7eac7a34e087)
 
-## Confirm Login Email
+### Confirm Login Email
 
 ![image](https://github.com/droneshire/avion_rewards_login_creator/assets/2355438/7046abfb-8598-43dc-9c6a-fed07fa54782)

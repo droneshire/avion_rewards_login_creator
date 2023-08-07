@@ -36,22 +36,46 @@ Alternatively, if you missed that window, you can click on that download icon bu
 
 Note: If this is the first time you use Google APIs, you may need to simply create an OAuth Consent screen and add your email as a testing user.
 
+Save this credential file in the root directory (same place this `README` is located in).
+
+Do this for both email accounts (e.g. as `google_credentials_main.json` and `google_credentials_backup.json`)
+
+## Env File
+
+Create a `.env` file in the root directory (same place this `README` is located in) with the following:
+
+```
+# Chrome Driver Configs
+CHROME_DRIVER_PATHS_BROWSER="/usr/bin/google-chrome-stable"
+CHROME_DRIVER_PATHS_DRIVER="/usr/local/bin/chromedriver"
+
+# Google Email Credentials
+GOOGLE_OATH_CREDENTIALS_FILE_MAIN="google_credentials_main.json"
+GMAIL_MAIN_EMAIL="MAIN_EMAIL@gmail.com"
+GOOGLE_OATH_CREDENTIALS_FILE_BACKUP="google_credentials_backup.json"
+GMAIL_BACKUP_EMAIL="BACKUP_EMAIL@gmail.com"
+```
+
 ## Running the Script
 
 On Linux/Mac:
+
 ```
 make create_account email=foo@gmail.com backup_email=bar@gmail.com
 ```
+
 On Windows:
+
 ```
 PYTHONPATH=C:\Path\To\Repo\src python3 -m executables.create_account --email foo@gmail.com --backup-email bar@gmail.com
 ```
 
-
 ## Landing Page
+
 Starts here, the bot does the rest!
 
 ![image](https://github.com/droneshire/avion_rewards_login_creator/assets/2355438/2de61549-1836-422d-86fb-7eac7a34e087)
 
 ## Confirm Login Email
+
 ![image](https://github.com/droneshire/avion_rewards_login_creator/assets/2355438/7046abfb-8598-43dc-9c6a-fed07fa54782)

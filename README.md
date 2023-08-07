@@ -1,5 +1,8 @@
 # Avion Rewards Login Creator
 
+[![Python application](https://github.com/droneshire/avion_rewards_login_center/actions/workflows/python-app.yml/badge.svg)](https://github.com/droneshire/avion_rewards_login_center/actions/workflows/python-app.yml)
+
+
 Automatically Create Avion Rewards Logins
 
 ## Sign Up

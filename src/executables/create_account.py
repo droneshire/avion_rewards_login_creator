@@ -1,6 +1,7 @@
 import argparse
 import os
 import random
+import re
 import string
 
 import dotenv
@@ -19,6 +20,11 @@ def generate_random_string(length: int) -> str:
     random_string = "".join(random.choice(characters) for _ in range(length))
 
     return random_string[0].upper() + random_string + "!"
+
+
+def is_valid_email(email: str) -> bool:
+    regex = r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b"
+    return re.fullmatch(regex, email) is not None
 
 
 def parse_args() -> argparse.Namespace:
@@ -124,10 +130,17 @@ def run_loop(args: argparse.Namespace) -> None:
         log.print_fail("Missing ACCOUNT_EMAILS environment variable.")
         raise ValueError("Missing ACCOUNT_EMAILS environment variable.")
 
-    email_list_strings = "\n\t".join(emails)
-    log.print_ok_blue(f"Creating {len(emails)} accounts:\n\t{email_list_strings}")
+    log.print_warn("Checking emails to create accounts for...")
+    emails_to_use = []
 
     for email in emails:
+        if is_valid_email(email):
+            log.print_ok_blue_arrow(f"{email} \U00002705")
+            emails_to_use.append(email)
+        else:
+            log.print_fail_arrow(f"{email} \U0000274C")
+
+    for email in emails_to_use:
         creator.start_new_account(email)
 
         wait.wait(20)

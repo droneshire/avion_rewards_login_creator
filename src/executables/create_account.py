@@ -77,7 +77,7 @@ def run_loop(args: argparse.Namespace) -> None:
     for email in emails_to_use:
         creator.start_new_account(email)
 
-        wait.wait(20)
+        wait.wait(10)
 
         if args.manual_input:
             login_code = input("Enter email login code: ")

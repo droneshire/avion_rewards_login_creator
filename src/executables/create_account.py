@@ -124,7 +124,7 @@ def run_loop(args: argparse.Namespace) -> None:
         log.print_fail("Missing ACCOUNT_EMAILS environment variable.")
         raise ValueError("Missing ACCOUNT_EMAILS environment variable.")
 
-    email_list_strings = "\t\n".join(emails)
+    email_list_strings = "\n\t".join(emails)
     log.print_ok_blue(f"Creating {len(emails)} accounts:\n\t{email_list_strings}")
 
     for email in emails:

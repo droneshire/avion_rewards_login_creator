@@ -50,6 +50,10 @@ class AccountCreator:
     def init(self) -> None:
         log.print_ok_arrow("Initializing Account Creator...")
 
+        log.print_bright("Using the following accounts for login codes:")
+        log.print_ok_arrow(f"Primary Email: {self.email}")
+        log.print_ok_arrow(f"Backup Email: {self.backup_email}")
+
     def start_new_account(self, login_email: str) -> None:
         wait(TIME_BETWEEN_STAGES)
         self.driver.get(BASE_URL)

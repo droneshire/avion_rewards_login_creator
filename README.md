@@ -42,6 +42,9 @@ GMAIL_MAIN_EMAIL="MAIN_EMAIL@gmail.com"
 GOOGLE_OATH_CREDENTIALS_FILE_BACKUP="google_credentials_backup.json"
 GMAIL_BACKUP_EMAIL="BACKUP_EMAIL@gmail.com"
 
+# comma separated email addresses to create accounts for
+ACCOUNT_EMAILS="test.email@gmail.com, test2.email@gmail.com"
+
 AVION_REWARDS_EMAIL_ADDRESS="Avion Rewards <avionrewards@offers.rbc.com>"
 AVION_REWARDS_EMAIL_SUBJECT="Avion Rewards Security Code"
 AVION_REWARDS_EMAIL_REGEX=Your Avion Rewards security code is (\d{6})
